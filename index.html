@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HappyBara - Mutlu Sohbetler</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #6e48aa;
+            --secondary-color: #9d50bb;
+            --accent-color: #4776e6;
+            --text-color: #ffffff;
+            --background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.2);
+            --button-hover: rgba(113, 89, 193, 0.8);
+            --error-color: #ff6b6b;
+            --success-color: #51cf66;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Giriş/Kayıt Ekranı */
+        .auth-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #4776e6, #8e54e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(142, 84, 233, 0.3);
+        }
+
+        .welcome {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--accent-color);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        /* Ana Uygulama Ekranı */
+        .app-container {
+            display: none;
+            width: 100%;
+            height: 80vh;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: rgba(0, 0, 0, 0.2);
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .profile-email {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .rooms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .create-room-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            width: auto;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .room-list {
+            list-style: none;
+        }
+
+        .room-item {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .room-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .room-item.active {
+            background: var(--primary-color);
+        }
+
+        .room-name {
+            flex: 1;
+        }
+
+        .room-lock {
+            margin-left: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+
+        /* Sohbet Alanı */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            padding: 15px 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--accent-color);
+        }
+
+        .message-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 70%;
+            align-self: flex-start;
+            word-wrap: break-word;
+        }
+
+        .message.me .message-content {
+            background: var(--accent-color);
+            align-self: flex-end;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 3px;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-input input {
+            flex: 1;
+            margin-right: 10px;
+            padding: 12px 15px;
+        }
+
+        .chat-input button {
+            width: auto;
+            padding: 12px 20px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .modal-footer button {
+            width: auto;
+            margin-left: 10px;
+        }
+
+        .modal-footer .cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animasyonlar */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Giriş/Kayıt Ekranı -->
+        <div class="auth-container fade-in" id="authScreen">
+            <div class="logo">HAPPYBARA</div>
+            <div class="welcome">Hoşgeldiniz Sefa Geldiniz</div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">Giriş Yap</div>
+                <div class="tab" onclick="switchTab('register')">Kayıt Ol</div>
+            </div>
+            
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">E-posta</label>
+                    <input type="email" id="loginEmail" placeholder="E-posta adresinizi girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Şifre</label>
+                    <input type="password" id="loginPassword" placeholder="Şifrenizi girin" required>
+                </div>
+                <div id="loginError" class="error-message"></div>
+                <button type="button" onclick="login()">Giriş Yap</button>
+            </form>
+            
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Adınız</label>
+                    <input type="text" id="registerName" placeholder="Adınızı girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">E-posta</label>
+                    <input type="email" id="registerEmail" placeholder="E-posta adresinizi girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Şifre (en az 6 karakter)</label>
+                    <input type="password" id="registerPassword" placeholder="Şifrenizi girin" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Şifre Tekrar</label>
+                    <input type="password" id="registerConfirmPassword" placeholder="Şifrenizi tekrar girin" required>
+                </div>
+                <div id="registerError" class="error-message"></div>
+                <div id="registerSuccess" class="success-message"></div>
+                <button type="button" onclick="register()">Kayıt Ol</button>
+            </form>
+        </div>
+        
+        <!-- Ana Uygulama Ekranı -->
+        <div class="app-container" id="appScreen">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="profile-section">
+                    <div class="profile-pic" id="profilePic">U</div>
+                    <div class="profile-info">
+                        <div class="profile-name" id="profileName">Kullanıcı</div>
+                        <div class="profile-email" id="profileEmail">email@example.com</div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+                
+                <div class="rooms-section">
+                    <div class="rooms-header">
+                        <div class="section-title">Odalar</div>
+                        <button class="create-room-btn" onclick="showCreateRoomModal()">
+                            <i class="fas fa-plus"></i> Yeni Oda
+                        </button>
+                    </div>
+                    <ul class="room-list" id="roomList">
+                        <!-- Odalar buraya eklenecek -->
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Sohbet Alanı -->
+            <div class="chat-area">
+                <div class="chat-header">
+                    <div id="currentRoomName">Bir oda seçin</div>
+                    <title>HappyBara - Mutlu Sohbetler</title>
+                    <div id="roomMembersCount">0 üye</div>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Mesajlar buraya eklenecek -->
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Bir mesaj yazın..." disabled>
+                    <button onclick="sendMessage()" disabled id="sendMessageBtn">Gönder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Oda Oluşturma Modalı -->
+    <div class="modal" id="createRoomModal">
+        <div class="modal-content">
+            <div class="modal-header">Yeni Oda Oluştur</div>
+            <div class="form-group">
+                <label for="roomName">Oda Adı</label>
+                <input type="text" id="roomName" placeholder="Oda adını girin" required>
+            </div>
+            <div class="form-group">
+                <label for="roomPassword">Oda Şifresi (isteğe bağlı)</label>
+                <input type="password" id="roomPassword" placeholder="Şifre belirleyin (boş bırakabilirsiniz)">
+            </div>
+            <div id="createRoomError" class="error-message"></div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="hideModal('createRoomModal')">İptal</button>
+                <button onclick="createRoom()">Oluştur</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Oda Şifre Modalı -->
+    <div class="modal" id="roomPasswordModal">
+        <div class="modal-content">
+            <div class="modal-header" id="passwordModalTitle">Odaya Giriş</div>
+            <div class="form-group">
+                <label for="inputRoomPassword">Şifre</label>
+                <input type="password" id="inputRoomPassword" placeholder="Oda şifresini girin" required>
+            </div>
+            <div id="roomPasswordError" class="error-message"></div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="hideModal('roomPasswordModal')">İptal</button>
+                <button onclick="joinRoomWithPassword()">Giriş Yap</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase ve Uygulama JS -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+       
+
+        // Firebase'i başlat
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Uygulama durumu
+        let currentUser = null;
+        let currentRoom = null;
+        let roomsUnsubscribe = null;
+        let messagesUnsubscribe = null;
+        let selectedRoomId = null;
+
+        // Tab geçiş fonksiyonu
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const forms = document.querySelectorAll('.auth-form');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            forms.forEach(form => form.classList.remove('active'));
+            
+            if (tabName === 'login') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+        
+        // Giriş fonksiyonu
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorElement = document.getElementById('loginError');
+            
+            errorElement.textContent = '';
+            
+            if (!email || !password) {
+                errorElement.textContent = 'Lütfen tüm alanları doldurun.';
+                return;
+            }
+            
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                currentUser = userCredential.user;
+                initApp();
+            } catch (error) {
+                console.error('Giriş hatası:', error);
+                errorElement.textContent = getAuthErrorMessage(error);
+            }
+        }
+        
+        // Kayıt fonksiyonu
+        async function register() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const errorElement = document.getElementById('registerError');
+            const successElement = document.getElementById('registerSuccess');
+            
+            errorElement.textContent = '';
+            successElement.textContent = '';
+            
+            if (!name || !email || !password || !confirmPassword) {
+                errorElement.textContent = 'Lütfen tüm alanları doldurun.';
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                errorElement.textContent = 'Şifreler eşleşmiyor!';
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorElement.textContent = 'Şifre en az 6 karakter olmalıdır.';
+                return;
+            }
+            
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                currentUser = userCredential.user;
+                
+                // Kullanıcı profilini Firestore'a kaydet
+                await db.collection('users').doc(currentUser.uid).set({
+                    name: name,
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                successElement.textContent = 'Kayıt başarılı! Giriş yapılıyor...';
+                initApp();
+            } catch (error) {
+                console.error('Kayıt hatası:', error);
+                errorElement.textContent = getAuthErrorMessage(error);
+            }
+        }
+        
+        // Auth hata mesajlarını düzenle
+        function getAuthErrorMessage(error) {
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    return 'Bu e-posta zaten kullanımda.';
+                case 'auth/invalid-email':
+                    return 'Geçersiz e-posta adresi.';
+                case 'auth/weak-password':
+                    return 'Şifre çok zayıf. Daha güçlü bir şifre seçin.';
+                case 'auth/user-not-found':
+                    return 'Bu e-posta ile kayıtlı kullanıcı bulunamadı.';
+                case 'auth/wrong-password':
+                    return 'Hatalı şifre.';
+                default:
+                    return 'Bir hata oluştu. Lütfen tekrar deneyin.';
+            }
+        }
+        
+        // Uygulamayı başlat
+        async function initApp() {
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('appScreen').style.display = 'flex';
+            
+            // Kullanıcı bilgilerini yükle
+            await loadUserProfile();
+            
+            // Odaları dinle
+            listenForRooms();
+        }
+        
+        // Kullanıcı profilini yükle
+        async function loadUserProfile() {
+            if (!currentUser) return;
+            
+            const userDoc = await db.collection('users').doc(currentUser.uid).get();
+            const userData = userDoc.data();
+            
+            document.getElementById('profileName').textContent = userData.name;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            
+            // Profil resmi için baş harf
+            const firstLetter = userData.name.charAt(0).toUpperCase();
+            document.getElementById('profilePic').textContent = firstLetter;
+        }
+        
+        // Odaları dinle
+        function listenForRooms() {
+            if (roomsUnsubscribe) {
+                roomsUnsubscribe();
+            }
+            
+            roomsUnsubscribe = db.collection('rooms').onSnapshot(snapshot => {
+                const roomList = document.getElementById('roomList');
+                roomList.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const room = doc.data();
+                    const roomItem = document.createElement('li');
+                    roomItem.className = 'room-item';
+                    roomItem.dataset.roomId = doc.id;
+                    roomItem.innerHTML = `
+                        <div class="room-name">${room.name}</div>
+                        ${room.password ? '<i class="fas fa-lock room-lock"></i>' : ''}
+                    `;
+                    
+                    roomItem.addEventListener('click', () => selectRoom(doc.id, room));
+                    roomList.appendChild(roomItem);
+                });
+            }, error => {
+                console.error('Odalar dinlenirken hata:', error);
+            });
+        }
+        
+        // Oda seç
+        function selectRoom(roomId, room) {
+            selectedRoomId = roomId;
+            
+            // Tüm oda öğelerinden active classını kaldır
+            document.querySelectorAll('.room-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Seçilen odaya active classı ekle
+            document.querySelector(`.room-item[data-room-id="${roomId}"]`).classList.add('active');
+            
+            // Oda şifreli mi kontrol et
+            if (room.password) {
+                showRoomPasswordModal(roomId, room.name);
+            } else {
+                joinRoom(roomId);
+            }
+        }
+        
+        // Odaya katıl
+        function joinRoom(roomId) {
+            // Önceki mesaj dinleyicisini temizle
+            if (messagesUnsubscribe) {
+                messagesUnsubscribe();
+            }
+            
+            currentRoom = roomId;
+            
+            // Sohbet alanını güncelle
+            const roomItem = document.querySelector(`.room-item[data-room-id="${roomId}"]`);
+            const roomName = roomItem.querySelector('.room-name').textContent;
+            document.getElementById('currentRoomName').textContent = roomName;
+            
+            // Mesaj girişini etkinleştir
+            document.getElementById('messageInput').disabled = false;
+            document.getElementById('sendMessageBtn').disabled = false;
+            
+            // Mesajları temizle
+            document.getElementById('chatMessages').innerHTML = '';
+            
+            // Üye sayısını güncelle
+            updateMemberCount(roomId);
+            
+            // Mesajları dinle
+            messagesUnsubscribe = db.collection('rooms').doc(roomId).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .onSnapshot(snapshot => {
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const message = change.doc.data();
+                            addMessageToChat(message);
+                        }
+                    });
+                });
+        }
+        
+        // Odaya şifre ile katılma modalını göster
+        function showRoomPasswordModal(roomId, roomName) {
+            document.getElementById('passwordModalTitle').textContent = `${roomName} - Şifre Gerekli`;
+            document.getElementById('inputRoomPassword').value = '';
+            document.getElementById('roomPasswordError').textContent = '';
+            document.getElementById('roomPasswordModal').dataset.roomId = roomId;
+            showModal('roomPasswordModal');
+        }
+        
+        // Şifre ile odaya katıl
+        async function joinRoomWithPassword() {
+            const roomId = document.getElementById('roomPasswordModal').dataset.roomId;
+            const password = document.getElementById('inputRoomPassword').value;
+            const errorElement = document.getElementById('roomPasswordError');
+            
+            errorElement.textContent = '';
+            
+            if (!password) {
+                errorElement.textContent = 'Lütfen şifreyi girin.';
+                return;
+            }
+            
+            try {
+                const roomDoc = await db.collection('rooms').doc(roomId).get();
+                const room = roomDoc.data();
+                
+                if (room.password === password) {
+                    hideModal('roomPasswordModal');
+                    joinRoom(roomId);
+                } else {
+                    errorElement.textContent = 'Hatalı şifre!';
+                }
+            } catch (error) {
+                console.error('Odaya katılma hatası:', error);
+                errorElement.textContent = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+            }
+        }
+        
+        // Üye sayısını güncelle
+        function updateMemberCount(roomId) {
+            // Basit bir şekilde odadaki kullanıcı sayısını güncelle
+            // Gerçek uygulamada daha karmaşık bir takip mekanizması gerekebilir
+            db.collection('rooms').doc(roomId).collection('activeUsers').doc(currentUser.uid).set({
+                userId: currentUser.uid,
+                name: document.getElementById('profileName').textContent,
+                joinedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            db.collection('rooms').doc(roomId).collection('activeUsers').onSnapshot(snapshot => {
+                document.getElementById('roomMembersCount').textContent = `${snapshot.size} üye`;
+            });
+        }
+        
+        // Mesaj gönder
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (!message || !currentRoom || !currentUser) return;
+            
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const userData = userDoc.data();
+                
+                await db.collection('rooms').doc(currentRoom).collection('messages').add({
+                    senderId: currentUser.uid,
+                    senderName: userData.name,
+                    content: message,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                messageInput.value = '';
+            } catch (error) {
+                console.error('Mesaj gönderme hatası:', error);
+                alert('Mesaj gönderilirken bir hata oluştu.');
+            }
+        }
+        
+        // Mesajı sohbete ekle
+        function addMessageToChat(message) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            
+            const isMe = message.senderId === currentUser.uid;
+            const messageTime = message.timestamp?.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            messageElement.className = `message ${isMe ? 'me' : ''}`;
+            messageElement.innerHTML = `
+                <div class="message-sender">${message.senderName}</div>
+                <div class="message-content">${message.content}</div>
+                <div class="message-time">${messageTime}</div>
+            `;
+            
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Oda oluşturma modalını göster
+        function showCreateRoomModal() {
+            document.getElementById('roomName').value = '';
+            document.getElementById('roomPassword').value = '';
+            document.getElementById('createRoomError').textContent = '';
+            showModal('createRoomModal');
+        }
+        
+        // Oda oluştur
+        async function createRoom() {
+            const name = document.getElementById('roomName').value.trim();
+            const password = document.getElementById('roomPassword').value.trim();
+            const errorElement = document.getElementById('createRoomError');
+            
+            errorElement.textContent = '';
+            
+            if (!name) {
+                errorElement.textContent = 'Lütfen oda adını girin.';
+                return;
+            }
+            
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const userData = userDoc.data();
+                
+                const roomData = {
+                    name: name,
+                    createdBy: currentUser.uid,
+                    creatorName: userData.name,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    password: password || null
+                };
+                
+                await db.collection('rooms').add(roomData);
+                hideModal('createRoomModal');
+            } catch (error) {
+                console.error('Oda oluşturma hatası:', error);
+                errorElement.textContent = 'Oda oluşturulurken bir hata oluştu.';
+            }
+        }
+        
+        // Çıkış yap
+        function logout() {
+            if (messagesUnsubscribe) messagesUnsubscribe();
+            if (roomsUnsubscribe) roomsUnsubscribe();
+            
+            auth.signOut().then(() => {
+                currentUser = null;
+                currentRoom = null;
+                document.getElementById('appScreen').style.display = 'none';
+                document.getElementById('authScreen').style.display = 'block';
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('loginError').textContent = '';
+                switchTab('login');
+            });
+        }
+        
+        // Modal göster
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+        
+        // Modal gizle
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // Sayfa yüklendiğinde kullanıcı oturumunu kontrol et
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                initApp();
+            }
+        });
+        
+        
+        // Enter tuşu ile mesaj gönderme
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        // Hareketli parçacık efekti (Canvas kullanarak)
+document.addEventListener('DOMContentLoaded', function() {
+  const canvas = document.createElement('canvas');
+  canvas.style.position = 'fixed';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.zIndex = '-2';
+  canvas.style.opacity = '0.3';
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = [];
+  const colors = ['rgba(110, 72, 170, 0.8)', 'rgba(71, 118, 230, 0.8)', 'rgba(255, 255, 255, 0.6)'];
+
+  // Parçacık oluşturma
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 3 + 1;
+      this.speedX = Math.random() * 1 - 0.5;
+      this.speedY = Math.random() * 1 - 0.5;
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+      if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+    }
+
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // 50 parçacık oluştur
+  for (let i = 0; i < 100; i++) {
+    particles.push(new Particle());
+  }
+
+  // Animasyon loop'u
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(particle => {
+      particle.update();
+      particle.draw();
+    });
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  // Pencere boyutu değiştiğinde canvas'ı yeniden boyutlandır
+  window.addEventListener('resize', function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+});
+
+    </script>
+</body>
+</html>
